@@ -1,0 +1,10 @@
+---
+title: Reporting
+description: This is the reporting page.
+---
+
+<h2>{{description}}</h2>
+
+<h3>Reporting stuff</h3>
+
+{{> button }}
