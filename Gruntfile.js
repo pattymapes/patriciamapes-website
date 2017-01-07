@@ -13,9 +13,13 @@ module.exports = function (grunt) {
     assemble: {
       options: {
         flatten: true,
+        plugins:['grunt-assemble-permalinks'],
         partials: ['templates/includes/*.hbs'],
         layoutdir: 'templates/layouts',
-        layout: 'default.hbs'
+        layout: 'default.hbs',
+        permalinks:{
+          structure:':basename/index.html'
+        }
       },
       site: {
         files: { 'dest/': ['templates/*.hbs'] }
@@ -23,22 +27,32 @@ module.exports = function (grunt) {
     },
     connect: {
       server: {
-        keepalive:true,
         options: {
           base: './dest',
           port: 3000,
-          //livereload: true,
+          livereload: true,
           open: true
         }
-      },
-      keepalive:true
+      }
+    },
+    //config for the watch command
+    watch:{
+      pages:{
+        files:['templates/*','content/*'],
+        tasks:['assemble'],
+        options:{
+          spawn:true,
+          livereload:true
+        }
+      }
     }
   });
 
   // Load the Assemble plugin.
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // The default task to run with the `grunt` command.
-  grunt.registerTask('default', ['assemble', 'connect:server:keepalive']);
+  grunt.registerTask('default', ['assemble','connect','watch']);
 };
