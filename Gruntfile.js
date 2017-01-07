@@ -13,12 +13,12 @@ module.exports = function (grunt) {
     assemble: {
       options: {
         flatten: true,
-        plugins:['grunt-assemble-permalinks'],
+        plugins: ['grunt-assemble-permalinks'],
         partials: ['templates/includes/*.hbs'],
         layoutdir: 'templates/layouts',
         layout: 'default.hbs',
-        permalinks:{
-          structure:':basename/index.html'
+        permalinks: {
+          structure: ':basename/index.html'
         }
       },
       site: {
@@ -35,24 +35,53 @@ module.exports = function (grunt) {
         }
       }
     },
+    clean: ['dest/*'],
     //config for the watch command
-    watch:{
-      pages:{
-        files:['templates/*','content/*'],
-        tasks:['assemble'],
-        options:{
-          spawn:true,
-          livereload:true
+    watch: {
+      pages: {
+        files: ['templates/*', 'content/*'],
+        tasks: ['assemble'],
+        options: {
+          spawn: true,
+          livereload: true
         }
       }
-    }
+    },
+
+    //deployment setup
+
+    aws: grunt.file.readJSON('deploy-keys.json'), // Load deploy variables
+    aws_s3: {
+      options: {
+        accessKeyId: '<%= aws.AWSAccessKeyId %>',
+        secretAccessKey: '<%= aws.AWSSecretKey %>',
+        region: '<%= aws.AWSRegion %>',
+        uploadConcurrency: 5, // 5 simultaneous uploads
+        downloadConcurrency: 5 // 5 simultaneous downloads
+      },
+      production: {
+        options: {
+          bucket: '<%= aws.bucket %>',
+        },
+        files: [
+          { expand: true, cwd: 'dest/', src: ['**'], dest: '/' }
+        ]
+      },
+    },
+
+
+
   });
 
   // Load the Assemble plugin.
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-aws-s3');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   // The default task to run with the `grunt` command.
-  grunt.registerTask('default', ['assemble','connect','watch']);
+  grunt.registerTask('default', ['clean', 'assemble', 'connect', 'watch']);
+
+  grunt.registerTask('deploy', ['clean', 'assemble', 'aws_s3']);
 };

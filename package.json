@@ -26,6 +26,8 @@
     "assemble": "~0.4.37",
     "grunt": "~0.4.3",
     "grunt-assemble-permalinks": "^0.1.1",
+    "grunt-aws-s3": "^0.14.5",
+    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-serve": "^0.1.6"
