@@ -25,6 +25,18 @@ module.exports = function (grunt) {
         files: { 'dest/': ['templates/*.hbs'] }
       }
     },
+    sass: {
+      dist: {
+        loadPath: ['./node_modules/bootstrap-sass/assets/stylesheets', './node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables'],
+        files: [{
+          expand: true,
+          cwd: 'src/scss',
+          src: ['main.scss'],
+          dest: 'dest/css',
+          ext: '.css'
+        }]
+      }
+    },
     connect: {
       server: {
         options: {
@@ -41,6 +53,14 @@ module.exports = function (grunt) {
       pages: {
         files: ['templates/*', 'content/*'],
         tasks: ['assemble'],
+        options: {
+          spawn: true,
+          livereload: true
+        }
+      },
+      css: {
+        files: ['src/scss/*'],
+        tasks: ['sass'],
         options: {
           spawn: true,
           livereload: true
@@ -89,9 +109,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-aws-s3');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-cloudfront-invalidate');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // The default task to run with the `grunt` command.
-  grunt.registerTask('default', ['clean', 'assemble', 'connect', 'watch']);
+  grunt.registerTask('default', ['clean', 'assemble', 'sass', 'connect', 'watch']);
 
-  grunt.registerTask('deploy', ['clean', 'assemble', 'aws_s3', 'cloudfront_invalidate']);
+  grunt.registerTask('deploy', ['clean', 'assemble', 'sass', 'aws_s3', 'cloudfront_invalidate']);
 };

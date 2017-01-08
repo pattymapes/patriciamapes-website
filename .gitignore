@@ -45,5 +45,7 @@ _site
 _draft
 dest
 
+.sass-cache
+
 # deploy keys
 deploy-keys.json
