@@ -2,5 +2,6 @@
     "AWSAccessKeyId": "",
     "AWSSecretKey": "",
     "AWSRegion": "",
-    "bucket": ""
+    "bucket": "",
+    "AWSCloudfrontId": ""
 }

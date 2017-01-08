@@ -43,3 +43,7 @@ bower_components
 _gh_pages
 _site
 _draft
+dest
+
+# deploy keys
+deploy-keys.json

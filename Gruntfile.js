@@ -69,6 +69,15 @@ module.exports = function (grunt) {
       },
     },
 
+    cloudfront_invalidate: {
+      options: {
+        accessKeyId: '<%= aws.AWSAccessKeyId %>',
+        secretAccessKey: '<%= aws.AWSSecretKey %>',
+        distributionId: '<%= aws.AWSCloudfrontId %>',
+        path: '/*'
+      }
+    },
+
 
 
   });
@@ -79,9 +88,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-aws-s3');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-cloudfront-invalidate');
 
   // The default task to run with the `grunt` command.
   grunt.registerTask('default', ['clean', 'assemble', 'connect', 'watch']);
 
-  grunt.registerTask('deploy', ['clean', 'assemble', 'aws_s3']);
+  grunt.registerTask('deploy', ['clean', 'assemble', 'aws_s3', 'cloudfront_invalidate']);
 };
